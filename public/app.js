@@ -1,10 +1,12 @@
 // ===== CONFIG =====
-const API_URL = 'http://localhost:3002/api';
+const API_URL = 'https://pakmedicose-pharmacy-production.up.railway.app/api';
 
-// Get license key from localStorage or use Pak Medicose Pharmacy key
+// Get license key from URL parameter, localStorage, or use default
+const urlParams = new URLSearchParams(window.location.search);
+const urlLicenseKey = urlParams.get('key');
 const CORRECT_LICENSE_KEY = 'PAKMEDICOSE-PHARM-PMP001-260909';
-let licenseKey = CORRECT_LICENSE_KEY;
-localStorage.setItem('licenseKey', CORRECT_LICENSE_KEY);
+let licenseKey = urlLicenseKey || localStorage.getItem('licenseKey') || CORRECT_LICENSE_KEY;
+localStorage.setItem('licenseKey', licenseKey);
 
 if (!licenseKey) {
   alert('License key required to access system');
