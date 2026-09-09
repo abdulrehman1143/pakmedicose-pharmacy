@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pak Medical Store - Management Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <h1>💊 Pak Medicose Pharmacy</h1>
+            <span class="subtitle">Management System v1.0</span>
+        </div>
+        <div class="header-right">
+            <div id="licenseStatus" class="license-badge">License Status</div>
+            <button id="logoutBtn" class="btn btn-outline">Logout</button>
+        </div>
+    </header>
+
+    <!-- License Alert (if <30 days remaining) -->
+    <div id="renewalAlert" class="alert alert-warning" style="display:none;">
+        ⚠️ Your license expires in <span id="daysRemaining"></span> days.
+        <a href="#config-tab" class="alert-link">Renew now</a>
+    </div>
+
+    <!-- Dashboard Stats -->
+    <div class="stats-container">
+        <div class="stat-card">
+            <h3>Today's Sales</h3>
+            <p id="todaysSales" class="stat-value">₨0</p>
+        </div>
+        <div class="stat-card">
+            <h3>Total Profit</h3>
+            <p id="totalProfit" class="stat-value">₨0</p>
+        </div>
+        <div class="stat-card">
+            <h3>Low Stock Items</h3>
+            <p id="lowStockCount" class="stat-value">0</p>
+        </div>
+        <div class="stat-card">
+            <h3>Expiring Soon</h3>
+            <p id="expiringCount" class="stat-value">0</p>
+        </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <nav class="tab-nav">
+        <button class="tab-btn active" data-tab="home">Home</button>
+        <button class="tab-btn" data-tab="inventory">📦 Inventory</button>
+        <button class="tab-btn" data-tab="billing">💳 Billing</button>
+        <button class="tab-btn" data-tab="prescriptions">📋 Prescriptions</button>
+        <button class="tab-btn" data-tab="scanner">📱 Scanner</button>
+        <button class="tab-btn" data-tab="reports">📊 Reports</button>
+        <button class="tab-btn" data-tab="customers">👥 Customers</button>
+        <button class="tab-btn" data-tab="config">⚙️ Settings</button>
+    </nav>
+
+    <!-- Tab Contents -->
+    <div class="tab-content">
+        <!-- HOME TAB -->
+        <div id="home-tab" class="tab-pane active">
+            <h2>Welcome to Pak Medical Store</h2>
+            <p>Complete Medical Store Management System</p>
+            <div class="home-grid">
+                <div class="home-card">
+                    <h3>📦 Quick Actions</h3>
+                    <ul>
+                        <li><a href="#inventory-tab" onclick="switchTab('inventory')">Add Medicine</a></li>
+                        <li><a href="#billing-tab" onclick="switchTab('billing')">Create Invoice</a></li>
+                        <li><a href="#reports-tab" onclick="switchTab('reports')">View Reports</a></li>
+                    </ul>
+                </div>
+                <div class="home-card">
+                    <h3>⚠️ Alerts</h3>
+                    <ul id="homeAlerts">
+                        <li>Loading alerts...</li>
+                    </ul>
+                </div>
+                <div class="home-card">
+                    <h3>📜 License Info</h3>
+                    <div id="homeLicenseInfo">Loading...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- INVENTORY TAB -->
+        <div id="inventory-tab" class="tab-pane">
+            <h2>Inventory Management</h2>
+            <button id="addMedicineBtn" class="btn btn-primary">+ Add Medicine</button>
+
+            <div id="medicineForm" class="form-container" style="display:none;">
+                <h3>Add/Edit Medicine</h3>
+                <form id="medicineFormElement">
+                    <input type="hidden" id="medicineId">
+                    <input type="text" id="medicineName" placeholder="Medicine Name" required>
+                    <input type="text" id="genericName" placeholder="Generic Name">
+                    <input type="text" id="sku" placeholder="SKU/Batch Code" required>
+                    <input type="number" id="quantity" placeholder="Quantity" required min="0">
+                    <input type="date" id="expiryDate" placeholder="Expiry Date">
+                    <input type="number" id="costPrice" placeholder="Cost Price" required step="0.01">
+                    <input type="number" id="sellingPrice" placeholder="Selling Price" required step="0.01">
+                    <select id="category">
+                        <option value="">Select Category</option>
+                        <option value="Antibiotics">Antibiotics</option>
+                        <option value="Painkillers">Painkillers</option>
+                        <option value="Vitamins">Vitamins</option>
+                        <option value="Cough/Cold">Cough/Cold</option>
+                        <option value="Digestive">Digestive</option>
+                        <option value="Skin">Skin Care</option>
+                        <option value="Other">Other</option>
+                    </select>
+                    <select id="supplierId">
+                        <option value="">Select Supplier</option>
+                    </select>
+                    <div class="form-buttons">
+                        <button type="submit" class="btn btn-success">Save Medicine</button>
+                        <button type="button" id="cancelMedicineBtn" class="btn btn-secondary">Cancel</button>
+                    </div>
+                </form>
+            </div>
+
+            <h3>Medicine List</h3>
+            <div class="search-box">
+                <input type="text" id="medicineSearch" placeholder="Search by name or SKU...">
+            </div>
+            <div class="table-responsive">
+                <table id="medicineTable">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>SKU</th>
+                            <th>Qty</th>
+                            <th>Expiry</th>
+                            <th>Cost</th>
+                            <th>Selling</th>
+                            <th>Profit/Unit</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+
+            <div id="expiringMedicines" class="alert alert-danger" style="display:none;">
+                <h4>⚠️ Medicines Expiring Soon</h4>
+                <ul id="expiringList"></ul>
+            </div>
+        </div>
+
+        <!-- BILLING TAB -->
+        <div id="billing-tab" class="tab-pane">
+            <h2>Point of Sale (POS)</h2>
+
+            <div class="billing-container">
+                <!-- Quick Search & Add Items -->
+                <div class="pos-left">
+                    <h3>Search Medicine</h3>
+                    <input type="text" id="posSearch" placeholder="Search medicine...">
+                    <div id="posSearchResults" class="search-results"></div>
+
+                    <h3>Shopping Cart</h3>
+                    <div class="table-responsive">
+                        <table id="cartTable">
+                            <thead>
+                                <tr>
+                                    <th>Medicine</th>
+                                    <th>Qty</th>
+                                    <th>Price</th>
+                                    <th>Subtotal</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="cartItems"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Bill Summary & Payment -->
+                <div class="pos-right">
+                    <h3>Bill Summary</h3>
+                    <div class="bill-summary">
+                        <p class="bill-line">Subtotal: <span id="subtotal">0</span></p>
+                        <p class="bill-line">Discount (%): <input type="number" id="discountPercent" min="0" max="100" value="0" style="width:60px;"></p>
+                        <p class="bill-line">Discount (₨): <span id="discountAmount">0</span></p>
+                        <p class="bill-line" style="border-top: 1px solid #e5e7eb; padding-top: 0.75rem; margin-top: 0.75rem;">
+                            After Discount: <span id="amountAfterDiscount">0</span>
+                        </p>
+                        <p class="bill-line">🇵🇰 Sales Tax (17%): <span id="taxAmount">0</span></p>
+                        <p class="bill-total">💰 TOTAL (w/ Tax): <span id="billTotal">0</span></p>
+                    </div>
+
+                    <h3>Customer Info</h3>
+                    <input type="text" id="customerName" placeholder="Customer Name">
+                    <input type="text" id="customerPhone" placeholder="Customer Phone">
+
+                    <h3>Payment Method</h3>
+                    <select id="paymentMethod">
+                        <option value="Cash">💵 Cash</option>
+                        <option value="Card">💳 Card</option>
+                        <option value="Online">🔗 Online Transfer</option>
+                    </select>
+
+                    <div id="amountReceivedContainer" style="display:none;">
+                        <h4>Amount Received</h4>
+                        <input type="number" id="amountReceived" placeholder="Amount">
+                        <p>Change: <span id="change">0</span></p>
+                    </div>
+
+                    <button id="completePaymentBtn" class="btn btn-success btn-large">Complete Payment</button>
+                    <button id="clearCartBtn" class="btn btn-secondary">Clear Cart</button>
+
+                    <div id="invoiceReceipt" class="invoice-receipt" style="display:none;">
+                        <h4>Invoice</h4>
+                        <p>Invoice #: <span id="invoiceNumber"></span></p>
+                        <p>Date: <span id="invoiceDate"></span></p>
+                        <p>Customer: <span id="receiptCustomerName"></span></p>
+                        <p>Total: <span id="receiptTotal"></span></p>
+                        <p>Payment: <span id="receiptPayment"></span></p>
+                        <button id="printInvoiceBtn" class="btn btn-info">🖨️ Print Invoice</button>
+                    </div>
+                </div>
+            </div>
+
+            <h3>Recent Invoices</h3>
+            <div class="table-responsive">
+                <table id="invoiceTable">
+                    <thead>
+                        <tr>
+                            <th>Invoice #</th>
+                            <th>Date</th>
+                            <th>Customer</th>
+                            <th>Total</th>
+                            <th>Payment</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- SCANNER TAB -->
+        <div id="scanner-tab" class="tab-pane">
+            <h2>Invoice Scanner</h2>
+            <p>Scan written medicine data or use camera to capture barcodes</p>
+            <iframe src="invoice-scanner.html?v=2.0" style="width: 100%; height: 800px; border: none; border-radius: 0.75rem;"></iframe>
+        </div>
+
+        <!-- PRESCRIPTIONS TAB -->
+        <div id="prescriptions-tab" class="tab-pane">
+            <h2>Prescription Management</h2>
+            <button id="addPrescriptionBtn" class="btn btn-primary">+ Add Prescription</button>
+
+            <div id="prescriptionForm" class="form-container" style="display:none;">
+                <h3>Add Prescription</h3>
+                <form id="prescriptionFormElement">
+                    <input type="hidden" id="prescriptionId">
+                    <input type="text" id="prescCustomerPhone" placeholder="Customer Phone" required>
+                    <select id="prescMedicineId" required>
+                        <option value="">Select Medicine</option>
+                    </select>
+                    <input type="text" id="prescDosage" placeholder="Dosage (e.g., 2 tablets x 2 times daily)" required>
+                    <textarea id="prescNotes" placeholder="Additional Notes"></textarea>
+                    <div class="form-buttons">
+                        <button type="submit" class="btn btn-success">Save Prescription</button>
+                        <button type="button" id="cancelPrescriptionBtn" class="btn btn-secondary">Cancel</button>
+                    </div>
+                </form>
+            </div>
+
+            <h3>Search Prescriptions</h3>
+            <input type="text" id="prescSearch" placeholder="Search by customer phone...">
+            <div class="table-responsive">
+                <table id="prescriptionTable">
+                    <thead>
+                        <tr>
+                            <th>Customer Phone</th>
+                            <th>Medicine</th>
+                            <th>Dosage</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- REPORTS TAB -->
+        <div id="reports-tab" class="tab-pane">
+            <h2>Reports & Analytics</h2>
+
+            <div class="report-filters">
+                <h3>Select Report Period</h3>
+                <input type="date" id="reportStartDate">
+                <input type="date" id="reportEndDate">
+                <button id="generateReportBtn" class="btn btn-primary">Generate Report</button>
+            </div>
+
+            <div id="reportOutput" class="report-output">
+                <h3>Daily Sales Report</h3>
+                <div class="report-cards">
+                    <div class="report-card">
+                        <h4>Total Sales</h4>
+                        <p id="reportTotalSales" class="report-value">₨0</p>
+                    </div>
+                    <div class="report-card">
+                        <h4>Total Profit</h4>
+                        <p id="reportTotalProfit" class="report-value">₨0</p>
+                    </div>
+                    <div class="report-card">
+                        <h4>Profit Margin</h4>
+                        <p id="reportProfitMargin" class="report-value">0%</p>
+                    </div>
+                    <div class="report-card">
+                        <h4>Medicines Sold</h4>
+                        <p id="reportMedicinesSold" class="report-value">0</p>
+                    </div>
+                </div>
+
+                <h3>Top Selling Medicines</h3>
+                <div class="table-responsive">
+                    <table id="topMedicinesTable">
+                        <thead>
+                            <tr>
+                                <th>Medicine</th>
+                                <th>Qty Sold</th>
+                                <th>Revenue</th>
+                                <th>Profit</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+
+                <button id="downloadReportBtn" class="btn btn-success">📥 Download PDF</button>
+
+                <h3 style="margin-top: 2rem;">🇵🇰 FBR Tax Compliance Report</h3>
+                <div class="report-cards">
+                    <div class="report-card">
+                        <h4>Total Tax Collected</h4>
+                        <p id="reportTotalTax" class="report-value">₨0</p>
+                    </div>
+                    <div class="report-card">
+                        <h4>Tax Rate</h4>
+                        <p id="reportTaxRate" class="report-value">17%</p>
+                    </div>
+                    <div class="report-card">
+                        <h4>Taxable Sales</h4>
+                        <p id="reportTaxableSales" class="report-value">₨0</p>
+                    </div>
+                    <div class="report-card">
+                        <h4>FBR Status</h4>
+                        <p id="reportFBRStatus" class="report-value" style="color: #10b981;">COMPLIANT</p>
+                    </div>
+                </div>
+
+                <p style="font-size: 0.9rem; color: #6b7280; margin-top: 1rem;">
+                    <strong>ℹ️ FBR Filing Info:</strong> Monthly tax returns due by 25th of following month.<br>
+                    NTN Required | All invoices tracked | Digital compliance maintained
+                </p>
+            </div>
+        </div>
+
+        <!-- CUSTOMERS TAB -->
+        <div id="customers-tab" class="tab-pane">
+            <h2>Customer Management</h2>
+            <button id="addCustomerBtn" class="btn btn-primary">+ Add Customer</button>
+
+            <div id="customerForm" class="form-container" style="display:none;">
+                <h3>Add Customer</h3>
+                <form id="customerFormElement">
+                    <input type="hidden" id="customerId">
+                    <input type="text" id="customerFormName" placeholder="Name" required>
+                    <input type="text" id="customerFormPhone" placeholder="Phone" required>
+                    <input type="email" id="customerFormEmail" placeholder="Email">
+                    <div class="form-buttons">
+                        <button type="submit" class="btn btn-success">Save Customer</button>
+                        <button type="button" id="cancelCustomerBtn" class="btn btn-secondary">Cancel</button>
+                    </div>
+                </form>
+            </div>
+
+            <h3>Search Customers</h3>
+            <input type="text" id="customerSearch" placeholder="Search by name or phone...">
+            <div class="table-responsive">
+                <table id="customerTable">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Phone</th>
+                            <th>Email</th>
+                            <th>Loyalty Pts</th>
+                            <th>Total Spent</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- SETTINGS TAB -->
+        <div id="config-tab" class="tab-pane">
+            <h2>Settings & Configuration</h2>
+
+            <!-- License Information -->
+            <div class="settings-section">
+                <h3>📜 License Information</h3>
+                <div class="license-info">
+                    <p><strong>Store Name:</strong> <span id="storeName">Pak Medical Store</span></p>
+                    <p><strong>License Key:</strong> <span id="licenseKey">Loading...</span></p>
+                    <p><strong>Active Until:</strong> <span id="licenseExpiry">Loading...</span></p>
+                    <p><strong>Days Remaining:</strong> <span id="daysRemainingConfig">Loading...</span></p>
+                    <p><strong>Status:</strong> <span id="licenseStatusBadge" class="badge">Active</span></p>
+                    <a href="#" id="renewLicenseLink" class="btn btn-warning">🔄 Renew License</a>
+                </div>
+            </div>
+
+            <!-- Store Configuration -->
+            <div class="settings-section">
+                <h3>🏪 Store Configuration</h3>
+                <form id="storeConfigForm">
+                    <input type="text" id="configStoreName" placeholder="Store Name" value="Pak Medicose Pharmacy">
+                    <input type="email" id="configStoreEmail" placeholder="Store Email">
+                    <input type="text" id="configStorePhone" placeholder="Store Phone">
+                    <input type="text" id="configStoreAddress" placeholder="Store Address">
+                    <input type="text" id="configStoreCity" placeholder="City">
+                    <input type="text" id="configStoreLicenseNo" placeholder="License/Registration Number">
+
+                    <h4>🇵🇰 FBR Tax Compliance (Pakistan)</h4>
+                    <input type="text" id="configStoreNTN" placeholder="NTN (National Tax Number)" required>
+                    <p style="font-size: 0.85rem; color: #6b7280; margin-top: -0.5rem;">Example: 1234567-8 (required for tax filing)</p>
+
+                    <input type="number" id="configSalesTaxPercent" placeholder="Sales Tax %" min="0" max="100" value="17" required>
+                    <p style="font-size: 0.85rem; color: #6b7280; margin-top: -0.5rem;">FBR Standard: 17% (GST)</p>
+
+                    <button type="submit" class="btn btn-success">Save Settings</button>
+                </form>
+            </div>
+
+            <!-- FBR Compliance Status -->
+            <div class="settings-section">
+                <h3>📋 FBR Compliance Status</h3>
+                <div id="fbrComplianceStatus" class="alert alert-warning">
+                    Loading compliance status...
+                </div>
+            </div>
+
+            <!-- About -->
+            <div class="settings-section">
+                <h3>ℹ️ About</h3>
+                <p>Pak Medicose Pharmacy Management System v1.0</p>
+                <p>Built by: Abdul Rehman | Support: admin@pakmedicosepharmacy.pk</p>
+                <p>🇵🇰 FBR Compliant | License Key recurring revenue model for sustainable business</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js?v=1.1"></script>
+</body>
+</html>

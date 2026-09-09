@@ -1,0 +1,126 @@
+╔════════════════════════════════════════════════════════════════╗
+║     PAK MEDICOSE PHARMACY - MANAGEMENT SYSTEM TEST GUIDE        ║
+║                    For Pakistan Client                          ║
+╚════════════════════════════════════════════════════════════════╝
+
+🔗 SYSTEM LINK (Share this):
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+https://pakmedicose-pharmacy-xxx.railway.app
+(URL will be provided after Railway deployment)
+
+🔑 LICENSE KEY:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PAKMEDICOSE-PHARM-PMP001-260909
+
+👤 TEST ACCOUNT:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Username: admin
+Password: (set on first login)
+
+📋 FEATURES TO TEST:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1️⃣  BILLING (💳 Tab)
+   ✓ Search medicine by name
+   ✓ Add to cart
+   ✓ Apply discount %
+   ✓ View tax calculation (17% auto)
+   ✓ Select payment method
+   ✓ Complete sale
+   ✓ Print invoice
+
+2️⃣  INVENTORY (📦 Tab)
+   ✓ Add new medicine
+   ✓ Enter: Name, SKU, Qty, Price
+   ✓ Set expiry date
+   ✓ View all medicines
+   ✓ Edit/delete medicine
+   ✓ Check expiry alerts
+   ✓ Low stock warnings
+
+3️⃣  PRESCRIPTIONS (📋 Tab)
+   ✓ Add customer phone
+   ✓ Select medicine
+   ✓ Enter dosage
+   ✓ Save prescription
+   ✓ Search by phone
+   ✓ View history
+
+4️⃣  REPORTS (📊 Tab)
+   ✓ Select date range
+   ✓ Generate report
+   ✓ View total sales
+   ✓ See FBR tax collected
+   ✓ Download PDF
+
+5️⃣  CUSTOMERS (👥 Tab)
+   ✓ Add new customer
+   ✓ View purchase history
+   ✓ Track loyalty points
+
+6️⃣  SETTINGS (⚙️ Tab)
+   ✓ Check license status
+   ✓ Enter NTN number (tax ID)
+   ✓ Verify FBR compliance
+   ✓ Save store details
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⭐ KEY FEATURES:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✓ 🇵🇰 FBR Compliant (17% auto tax)
+✓ Digital invoices
+✓ Real-time reports
+✓ Customer database
+✓ Print support
+✓ Inventory tracking
+✓ Prescription management
+✓ License key system
+
+📱 ACCESS FROM:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✓ Desktop computer
+✓ Laptop
+✓ Tablet
+✓ Smartphone (mobile view)
+✓ Any browser (Chrome, Firefox, Safari)
+
+⚠️ TROUBLESHOOTING:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Page not loading?
+→ Wait 2-3 minutes (first load)
+→ Clear browser cache (Ctrl+Shift+Del)
+→ Try incognito/private window
+
+License key not working?
+→ Copy exactly: PAKMEDICOSE-PHARM-PMP001-260909
+→ No spaces or extra characters
+→ Case sensitive
+
+Database error?
+→ Refresh page (Ctrl+R)
+→ Try different browser
+
+💬 FEEDBACK:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Please test everything and provide:
+✓ What works well
+✓ What needs improvement
+✓ Any errors/crashes
+✓ Speed/performance feedback
+✓ Feature requests
+
+Send feedback via WhatsApp/Email
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📞 SUPPORT:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Developer: Abdul Rehman
+Email: abdul.rahman.seo@gmail.com
+WhatsApp: +92-XXX-XXXXXXX
+Location: Saudi Arabia
+
+Thank you for testing! 🙏
+
+═══════════════════════════════════════════════════════════════════
