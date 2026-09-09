@@ -355,6 +355,21 @@ const completePayment = async () => {
     return;
   }
 
+  // Check for narcotics in cart
+  const narcoticsInCart = [];
+  for (let item of cart) {
+    const medicines = await api('/inventory');
+    const med = medicines.find(m => m.id === item.medicine_id);
+    if (med && med.is_narcotic) {
+      narcoticsInCart.push(med.name);
+    }
+  }
+
+  if (narcoticsInCart.length > 0) {
+    const confirmed = confirm(`⚠️ NARCOTIC MEDICINES ALERT:\n\n${narcoticsInCart.join('\n')}\n\nThese are controlled substances. Ensure customer has valid prescription.\n\nContinue with sale?`);
+    if (!confirmed) return;
+  }
+
   const customerName = document.getElementById('customerName').value || 'Walk-in Customer';
   const customerPhone = document.getElementById('customerPhone').value || null;
   const paymentMethod = document.getElementById('paymentMethod').value;
